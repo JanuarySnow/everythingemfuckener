@@ -42,9 +42,6 @@ namespace Theeverythingemfuckener
                     continue;
                 }
                 listOfRaces.Add(race_record.FormKey);
-                IRace race_edit = state.PatchMod.Races.GetOrAddAsOverride(race_record);
-                race_edit.Height.Male = NextFloat((float)0.2, (float)3.0);
-                race_edit.Height.Female = NextFloat((float)0.2, (float)3.0);
             }
             foreach( var outfit_record in state.LoadOrder.PriorityOrder.OnlyEnabled().Outfit().WinningOverrides())
             { 
@@ -56,21 +53,27 @@ namespace Theeverythingemfuckener
             foreach (var npc in state.LoadOrder.PriorityOrder.OnlyEnabled().Npc().WinningOverrides())
             {
                 if (npc != null && npc.EditorID != null) {
-                    if( npc.Name != null && npc.Name.String != null ){
-                        listofNames.Add(npc.Name.String);
-                    }
-                    if( npc.Voice != null)
+                    if (npc.Voice != null)
                     {
                         ListofVoices.Add(npc.Voice.FormKey);
                     }
+                }
+            }
+            foreach (var npc in state.LoadOrder.PriorityOrder.OnlyEnabled().Npc().WinningOverrides())
+            {
+                if (npc != null && npc.EditorID != null)
+                {
                     var npc_override = state.PatchMod.Npcs.GetOrAddAsOverride(npc);
                     var random = new Random();
                     int index = random.Next(listOfRaces.Count);
-                    int strindex = random.Next(listofNames.Count);
                     int randvoice = random.Next(ListofVoices.Count);
                     int rand_outfit = random.Next(ListofOutfits.Count);
-                    npc_override.Race.SetTo(listOfRaces[index]);
-                    npc_override.Name = listofNames[strindex];
+
+                    int rand1 = random.Next(10);
+                    if( rand1 == 0)
+                    {
+                        npc_override.Race.SetTo(listOfRaces[index]);
+                    }
                     npc_override.Voice.SetTo(ListofVoices[randvoice]);
                     npc_override.DefaultOutfit.SetTo(ListofOutfits[rand_outfit]);
                     int another_one = random.Next(ListofOutfits.Count);
@@ -95,19 +98,7 @@ namespace Theeverythingemfuckener
                 {
                     Console.WriteLine("rescaling thing" + inc);
                     IPlacedObject modifiedObject = placedobjectgetter.GetOrAddAsOverride(state.PatchMod);
-                    modifiedObject.Scale = NextFloat((float)0.8, (float)1.5);
-                    if (placedobjectgetter.Record.Base.TryResolve<IDoorGetter>(state.LinkCache, out var placedObjectBase))
-                    {
-                        if(placedobjectgetter.Record.TeleportDestination != null)
-                        {
-                            ListofDoors.Add(placedobjectgetter.Record.FormKey);
-                            var random = new Random();
-                            int index = random.Next(ListofDoors.Count);
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                            modifiedObject.TeleportDestination.Door.SetTo(ListofDoors[index]);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                        }
-                    }
+                    modifiedObject.Scale = NextFloat((float)0.95, (float)1.05);
                 }
 
                 inc += 1;
