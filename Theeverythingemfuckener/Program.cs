@@ -11,6 +11,8 @@ using Mutagen.Bethesda.Oblivion;
 using IRace = Mutagen.Bethesda.Skyrim.IRace;
 using IPlacedObject = Mutagen.Bethesda.Skyrim.IPlacedObject;
 using Mutagen.Bethesda.Fallout4;
+using IColorRecord = Mutagen.Bethesda.Skyrim.IColorRecord;
+using IOutfit = Mutagen.Bethesda.Skyrim.IOutfit;
 
 namespace Theeverythingemfuckener
 
@@ -131,7 +133,6 @@ namespace Theeverythingemfuckener
                 var color_override = state.PatchMod.Colors.GetOrAddAsOverride(colorgetter);
                 color_override.Color = c;
             }
-            int inc = 0;
             foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
                 if (placedobjectgetter.Record.MajorRecordFlagsRaw == 0x0000_0800) continue;
                 var random = new Random();
@@ -140,14 +141,10 @@ namespace Theeverythingemfuckener
                 {
                     if (placedobjectgetter.Record.EditorID == null)
                     {
-                        Console.WriteLine("rescaling thing" + inc);
                         IPlacedObject modifiedObject = placedobjectgetter.GetOrAddAsOverride(state.PatchMod);
                         modifiedObject.Scale = NextFloat((float)0.95, (float)1.05);
                     }
                 }
-                
-
-                inc += 1;
             }
         }
     }
