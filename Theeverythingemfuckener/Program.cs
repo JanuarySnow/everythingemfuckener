@@ -135,7 +135,7 @@ namespace Theeverythingemfuckener
             foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
                 if (placedobjectgetter.Record.MajorRecordFlagsRaw == 0x0000_0800) continue;
                 var random = new Random();
-                int rand1 = random.Next(6);
+                int rand1 = random.Next(20);
                 if( rand1 == 0)
                 {
                     if (placedobjectgetter.Record.EditorID == null)
