@@ -75,9 +75,13 @@ namespace Theeverythingemfuckener
                         npc_override.Race.SetTo(listOfRaces[index]);
                     }
                     npc_override.Voice.SetTo(ListofVoices[randvoice]);
-                    npc_override.DefaultOutfit.SetTo(ListofOutfits[rand_outfit]);
-                    int another_one = random.Next(ListofOutfits.Count);
-                    npc_override.SleepingOutfit.SetTo(ListofOutfits[another_one]);
+                    if ( outfit_record.EditorID != null)
+                    {
+                        npc_override.DefaultOutfit.SetTo(ListofOutfits[rand_outfit]);
+                        int another_one = random.Next(ListofOutfits.Count);
+                        npc_override.SleepingOutfit.SetTo(ListofOutfits[another_one]);
+                    }
+                    
 
                 }
             }
