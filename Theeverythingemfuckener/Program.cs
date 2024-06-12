@@ -7,9 +7,15 @@ using Mutagen.Bethesda.Skyrim;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins;
 using System.Drawing;
+using Mutagen.Bethesda.Oblivion;
+using IRace = Mutagen.Bethesda.Skyrim.IRace;
+using IPlacedObject = Mutagen.Bethesda.Skyrim.IPlacedObject;
+using Mutagen.Bethesda.Fallout4;
 
 namespace Theeverythingemfuckener
+
 {
+
     public class Program
     {
         public static async Task<int> Main(string[] args)
@@ -19,8 +25,7 @@ namespace Theeverythingemfuckener
                 .SetTypicalOpen(GameRelease.SkyrimSE, "YourPatcher.esp")
                 .Run(args);
         }
-
-
+        
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
             static float NextFloat(float min, float max)
@@ -30,12 +35,32 @@ namespace Theeverythingemfuckener
                 return (float)val;
             }
 
+            List<String> playableraces = new List<String>();
             List<FormLink<IRace>> listOfRaces = new List<FormLink<IRace>>();
             List<String> listofNames = new List<String>();
             List<FormLink<IPlacedObject>> ListofDoors = new List<FormLink<IPlacedObject>>();
             List<FormLink<IColorRecord>> ListofColors = new List<FormLink<IColorRecord>>();
             List<FormLink<IVoiceType>> ListofVoices = new List<FormLink<IVoiceType>>();
             List<FormLink<IOutfit>> ListofOutfits = new List<FormLink<IOutfit>>();
+
+            playableraces.Add("BretonRace");
+            playableraces.Add("DefaultRace");
+            playableraces.Add("DarkElfRace");
+            playableraces.Add("HighElfRace");
+            playableraces.Add("ImperialRace");
+            playableraces.Add("OrcRace");
+            playableraces.Add("RedguardRace");
+            playableraces.Add("WoodElfRace");
+            playableraces.Add("NordRaceVampire");
+            playableraces.Add("BretonRaceVampire");
+            playableraces.Add("DarkElfRaceVampire");
+            playableraces.Add("HighElfRaceVampire");
+            playableraces.Add("ImperialRaceVampire");
+            playableraces.Add("OrcRaceVampire");
+            playableraces.Add("RedguardRaceVampire");
+            playableraces.Add("WoodElfRaceVampire");
+
+
             foreach (var race_record in state.LoadOrder.PriorityOrder.OnlyEnabled().Race().WinningOverrides()) {
                 if (race_record.EditorID == null)
                 {
@@ -43,19 +68,20 @@ namespace Theeverythingemfuckener
                 }
                 listOfRaces.Add(race_record.FormKey);
             }
-            foreach( var outfit_record in state.LoadOrder.PriorityOrder.OnlyEnabled().Outfit().WinningOverrides())
-            { 
-                if ( outfit_record.EditorID != null)
-                {
-                    ListofOutfits.Add(outfit_record.FormKey);
-                }
-            }
             foreach (var npc in state.LoadOrder.PriorityOrder.OnlyEnabled().Npc().WinningOverrides())
             {
                 if (npc != null && npc.EditorID != null) {
-                    if (npc.Voice != null)
+                    var race = npc.Race.TryResolve(state.LinkCache);
+                    if(race == null) { continue; }
+                    var raceid = race.EditorID;
+                    if(raceid == null) { continue; }
+                    if (playableraces.Contains(raceid))
                     {
-                        ListofVoices.Add(npc.Voice.FormKey);
+                        ListofOutfits.Add(npc.DefaultOutfit.FormKey);
+                        if (npc.Voice != null)
+                        {
+                            ListofVoices.Add(npc.Voice.FormKey);
+                        }
                     }
                 }
             }
@@ -63,23 +89,33 @@ namespace Theeverythingemfuckener
             {
                 if (npc != null && npc.EditorID != null)
                 {
-                    var npc_override = state.PatchMod.Npcs.GetOrAddAsOverride(npc);
-                    var random = new Random();
-                    int index = random.Next(listOfRaces.Count);
-                    int randvoice = random.Next(ListofVoices.Count);
-                    int rand_outfit = random.Next(ListofOutfits.Count);
+                    var race = npc.Race.TryResolve(state.LinkCache);
+                    if (race == null) { continue; }
+                    var raceid = race.EditorID;
+                    if (raceid == null) { continue; }
+                    if (playableraces.Contains(raceid))
 
-                    int rand1 = random.Next(10);
-                    if( rand1 == 0)
                     {
-                        npc_override.Race.SetTo(listOfRaces[index]);
-                    }
-                    npc_override.Voice.SetTo(ListofVoices[randvoice]);
-                    if ( outfit_record.EditorID != null)
-                    {
-                        npc_override.DefaultOutfit.SetTo(ListofOutfits[rand_outfit]);
-                        int another_one = random.Next(ListofOutfits.Count);
-                        npc_override.SleepingOutfit.SetTo(ListofOutfits[another_one]);
+                        var npc_override = state.PatchMod.Npcs.GetOrAddAsOverride(npc);
+                        var random = new Random();
+                        int index = random.Next(listOfRaces.Count);
+                        int randvoice = random.Next(ListofVoices.Count);
+                        int rand_outfit = random.Next(ListofOutfits.Count);
+
+                        int rand1 = random.Next(10);
+                        if (rand1 == 0)
+                        {
+                            npc_override.Race.SetTo(listOfRaces[index]);
+                        }
+                        npc_override.Voice.SetTo(ListofVoices[randvoice]);
+                        var outfitold = npc.DefaultOutfit.TryResolve(state.LinkCache);
+                        if (outfitold == null) { continue; }
+                        if (outfitold.EditorID != null)
+                        {
+                            npc_override.DefaultOutfit.SetTo(ListofOutfits[rand_outfit]);
+                            int another_one = random.Next(ListofOutfits.Count);
+                            npc_override.SleepingOutfit.SetTo(ListofOutfits[another_one]);
+                        }
                     }
                     
 
