@@ -94,7 +94,7 @@ namespace Theeverythingemfuckener
             int inc = 0;
             foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
                 if (placedobjectgetter.Record.MajorRecordFlagsRaw == 0x0000_0800) continue;
-                var rnd = new Random();
+                var random = new Random();
                 int rand1 = random.Next(3);
                 if( rand1 == 0)
                 {
