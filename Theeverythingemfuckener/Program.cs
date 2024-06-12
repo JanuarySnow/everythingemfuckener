@@ -94,12 +94,18 @@ namespace Theeverythingemfuckener
             int inc = 0;
             foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
                 if (placedobjectgetter.Record.MajorRecordFlagsRaw == 0x0000_0800) continue;
-                if (placedobjectgetter.Record.EditorID == null)
+                var rnd = new Random();
+                int rand1 = random.Next(3);
+                if( rand1 == 0)
                 {
-                    Console.WriteLine("rescaling thing" + inc);
-                    IPlacedObject modifiedObject = placedobjectgetter.GetOrAddAsOverride(state.PatchMod);
-                    modifiedObject.Scale = NextFloat((float)0.95, (float)1.05);
+                    if (placedobjectgetter.Record.EditorID == null)
+                    {
+                        Console.WriteLine("rescaling thing" + inc);
+                        IPlacedObject modifiedObject = placedobjectgetter.GetOrAddAsOverride(state.PatchMod);
+                        modifiedObject.Scale = NextFloat((float)0.95, (float)1.05);
+                    }
                 }
+                
 
                 inc += 1;
             }
