@@ -42,7 +42,6 @@ namespace Theeverythingemfuckener
             List<String> listofNames = new List<String>();
             List<FormLink<IPlacedObject>> ListofDoors = new List<FormLink<IPlacedObject>>();
             List<FormLink<IColorRecord>> ListofColors = new List<FormLink<IColorRecord>>();
-            List<FormLink<IVoiceType>> ListofVoices = new List<FormLink<IVoiceType>>();
             List<FormLink<IOutfit>> ListofOutfits = new List<FormLink<IOutfit>>();
 
             playableraces.Add("BretonRace");
@@ -77,13 +76,9 @@ namespace Theeverythingemfuckener
                     if(race == null) { continue; }
                     var raceid = race.EditorID;
                     if(raceid == null) { continue; }
-                    if (playableraces.Contains(raceid))
+                    if (playableraces.Contains(raceid.ToString()))
                     {
                         ListofOutfits.Add(npc.DefaultOutfit.FormKey);
-                        if (npc.Voice != null)
-                        {
-                            ListofVoices.Add(npc.Voice.FormKey);
-                        }
                     }
                 }
             }
@@ -101,7 +96,6 @@ namespace Theeverythingemfuckener
                         var npc_override = state.PatchMod.Npcs.GetOrAddAsOverride(npc);
                         var random = new Random();
                         int index = random.Next(listOfRaces.Count);
-                        int randvoice = random.Next(ListofVoices.Count);
                         int rand_outfit = random.Next(ListofOutfits.Count);
 
                         int rand1 = random.Next(10);
@@ -109,7 +103,6 @@ namespace Theeverythingemfuckener
                         {
                             npc_override.Race.SetTo(listOfRaces[index]);
                         }
-                        npc_override.Voice.SetTo(ListofVoices[randvoice]);
                         var outfitold = npc.DefaultOutfit.TryResolve(state.LinkCache);
                         if (outfitold == null) { continue; }
                         if (outfitold.EditorID != null)
@@ -136,7 +129,7 @@ namespace Theeverythingemfuckener
             foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
                 if (placedobjectgetter.Record.MajorRecordFlagsRaw == 0x0000_0800) continue;
                 var random = new Random();
-                int rand1 = random.Next(20);
+                int rand1 = random.Next(10);
                 if( rand1 == 0)
                 {
                     if (placedobjectgetter.Record.EditorID == null)
