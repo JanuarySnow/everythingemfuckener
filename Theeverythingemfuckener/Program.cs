@@ -62,13 +62,6 @@ namespace Theeverythingemfuckener
             playableraces.Add("WoodElfRaceVampire");
 
 
-            foreach (var race_record in state.LoadOrder.PriorityOrder.OnlyEnabled().Race().WinningOverrides()) {
-                if (race_record.EditorID == null)
-                {
-                    continue;
-                }
-                listOfRaces.Add(race_record.FormKey);
-            }
             foreach (var npc in state.LoadOrder.PriorityOrder.OnlyEnabled().Npc().WinningOverrides())
             {
                 if (npc != null && npc.EditorID != null) {
@@ -79,6 +72,7 @@ namespace Theeverythingemfuckener
                     if (playableraces.Contains(raceid.ToString()))
                     {
                         ListofOutfits.Add(npc.DefaultOutfit.FormKey);
+                        Console.WriteLine(raceid.ToString());
                     }
                 }
             }
@@ -98,11 +92,6 @@ namespace Theeverythingemfuckener
                         int index = random.Next(listOfRaces.Count);
                         int rand_outfit = random.Next(ListofOutfits.Count);
 
-                        int rand1 = random.Next(10);
-                        if (rand1 == 0)
-                        {
-                            npc_override.Race.SetTo(listOfRaces[index]);
-                        }
                         var outfitold = npc.DefaultOutfit.TryResolve(state.LinkCache);
                         if (outfitold == null) { continue; }
                         if (outfitold.EditorID != null)
@@ -129,7 +118,7 @@ namespace Theeverythingemfuckener
             foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
                 if (placedobjectgetter.Record.MajorRecordFlagsRaw == 0x0000_0800) continue;
                 var random = new Random();
-                int rand1 = random.Next(20);
+                int rand1 = random.Next(10);
                 if( rand1 == 0)
                 {
                     if (placedobjectgetter.Record.EditorID == null)
