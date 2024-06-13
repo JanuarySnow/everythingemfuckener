@@ -71,6 +71,8 @@ namespace Theeverythingemfuckener
                     if(raceid == null) { continue; }
                     if (playableraces.Contains(raceid.ToString()))
                     {
+                        var getoutfit = npc.DefaultOutfit.TryResolve(state.LinkCache);
+                        if (getoutfit == null) { continue; }
                         ListofOutfits.Add(npc.DefaultOutfit.FormKey);
                         Console.WriteLine(raceid.ToString());
                     }
@@ -124,7 +126,7 @@ namespace Theeverythingemfuckener
                     if (placedobjectgetter.Record.EditorID == null)
                     {
                         IPlacedObject modifiedObject = placedobjectgetter.GetOrAddAsOverride(state.PatchMod);
-                        modifiedObject.Scale = NextFloat((float)0.95, (float)1.05);
+                        modifiedObject.Scale = NextFloat((float)0.85, (float)1.15);
                     }
                 }
             }
