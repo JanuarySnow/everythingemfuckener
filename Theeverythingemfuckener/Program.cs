@@ -117,7 +117,7 @@ namespace Theeverythingemfuckener
                 var color_override = state.PatchMod.Colors.GetOrAddAsOverride(colorgetter);
                 color_override.Color = c;
             }
-            foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
+            /*foreach (var placedobjectgetter in state.LoadOrder.PriorityOrder.OnlyEnabled().PlacedObject().WinningContextOverrides(state.LinkCache)) {
                 if (placedobjectgetter.Record.MajorRecordFlagsRaw == 0x0000_0800) continue;
                 var random = new Random();
                 int rand1 = random.Next(10);
@@ -129,7 +129,7 @@ namespace Theeverythingemfuckener
                         modifiedObject.Scale = NextFloat((float)0.85, (float)1.15);
                     }
                 }
-            }
+            }*/
         }
     }
 }
